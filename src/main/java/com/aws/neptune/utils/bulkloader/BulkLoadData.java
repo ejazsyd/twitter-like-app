@@ -59,8 +59,9 @@ public class BulkLoadData {
 	            System.exit(1);
 	        }
 	        
-	        
-	        HttpResponse response = new BulkLoadData().sendLoadDataRequest(args[1],  args[2], args[3], args[4], args[5]);
+	        System.out.println(args.length);
+	        System.out.println("Arguments: "+ args[0] + " " + args[1]);
+	        HttpResponse response = new BulkLoadData().sendLoadDataRequest(args[0],  args[1], args[2], args[3], args[4]);
 	        
 	        System.out.println(response);
 	        
