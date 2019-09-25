@@ -26,13 +26,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 public class BulkLoadData {
 
 	
-	public HttpResponse sendLoadDataRequest(String neptuneEndpoint, String iamRoleArn) throws Exception
+	public HttpResponse sendLoadDataRequest(String neptuneEndpoint, String port, String iamRoleArn, String bucketFolder, String region) throws Exception
 	{
 		String payload = 
-				"{\"source\": \"s3://neptune-s3/twitterlikeapp/\", " +
+				"{\"source\": \"s3://" + bucketFolder + "/\", " +
                 "\"format\": \"csv\", " +
-                "\"iamRoleArn\": \"arn:aws:iam::213930781331:role/s3-from-neptune-2\"," +
-                "\"region\": \"us-east-1\", " +
+                "\"iamRoleArn\": \""+ iamRoleArn + "\"," +
+                "\"region\": \"" + region + "\", " +
                 "\"failOnError\": \"FALSE\" " +
                 "}";
 		System.out.println("Payload => \n"+payload);
@@ -41,7 +41,7 @@ public class BulkLoadData {
         		ContentType.create("application/json"));
 
         HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost("http://neptune360.cluajh6rcbti.us-east-1.neptune.amazonaws.com:8182/loader");
+        HttpPost request = new HttpPost("http://"+neptuneEndpoint+":"+port+"/loader");
         request.setHeader("Content-Type", "application/json");
         request.setEntity(entity);
 
@@ -55,12 +55,12 @@ public class BulkLoadData {
 	
 	 public static void main(String[] args) throws Exception {
 	        if (null == args || args.length < 2) {
-	            System.err.println("Usage: BulkLoadData <neptune-endpoint> <iam-s3-role-arn>");
+	            System.err.println("Usage: BulkLoadData <neptune-endpoint> <port> <iam-s3-role-arn> <s3-bucket-name>/<folder-name> <aws-region-code>");
 	            System.exit(1);
 	        }
 	        
 	        
-	        HttpResponse response = new BulkLoadData().sendLoadDataRequest("http://neptune360.cluajh6rcbti.us-east-1.neptune.amazonaws.com",  "test");
+	        HttpResponse response = new BulkLoadData().sendLoadDataRequest(args[1],  args[2], args[3], args[4], args[5]);
 	        
 	        System.out.println(response);
 	        
